@@ -1,0 +1,8 @@
+.main-header .logo {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; !important;
+	font-weight: 600;
+}
+.skin-green .main-header .navbar, .skin-green .main-header .logo, .skin-green .main-header .logo:hover, .skin-green .main-header .navbar .sidebar-toggle:hover {
+	background-color: #b61827; !important;
+}
+
