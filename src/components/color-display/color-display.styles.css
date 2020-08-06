@@ -1,0 +1,17 @@
+.color-point{
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+}
+
+.color-detail-container{
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.color-display{
+    display: flex;
+    flex-direction: column;
+}
