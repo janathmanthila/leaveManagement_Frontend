@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 class Designation extends Component {
   constructor(props) {
@@ -16,9 +17,17 @@ class Designation extends Component {
   createDesignation = (event) => {
     event.preventDefault();
     var formData = new FormData(event.target);
+    if(this.state.designations.filter(designation => designation.designation_code === formData.get("designation_code")).length > 1){
+      return Swal.fire({
+        title: 'Oops!!!',
+        text: 'Designation code already exists',
+        icon: 'error',
+      })
+    }
     const designation = {
       designation: formData.get("designation"),
       designation_code: formData.get("designation_code"),
+      designation_status: true,
     };
     axios
       .post("http://localhost:9000/designation/add", designation)
@@ -86,18 +95,39 @@ class Designation extends Component {
   };
 
   deleteDesignation(id) {
-    axios
-      .delete("http://localhost:9000/designation/delete/" + id)
-      .then((res) => {
-        console.log("designation successfully deleted!");
-        window.location.href = "/designation";
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(
-          "Cannot delete this designation, this designation has records from employees.."
-        );
-      });
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        axios
+            .delete("http://localhost:9000/designation/delete/" + id)
+            .then((res) => {
+              Swal.fire({
+                title: 'YAY!!!',
+                text: 'Designation has been deleted successfully',
+                icon: 'success',
+                timer: 1000
+              }).then(() => {
+                window.location.href = "/designation";
+              })
+            })
+            .catch((error) => {
+              console.log(error);
+              return Swal.fire({
+                title: 'Oops!!!',
+                text: 'Cannot delete this designation, this designation has records from employees..',
+                icon: 'error',
+              })
+            });
+      }
+    })
+
   }
 
   getDesignations = () => {

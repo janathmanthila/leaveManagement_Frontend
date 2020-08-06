@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 var supervisorsList = [];
 var designationsList = [];
@@ -29,7 +30,7 @@ class Employee extends Component {
       });
 
     axios
-      .get("http://localhost:9000/designation")
+      .get("http://localhost:9000/designation/active")
       .then((response) => {
         this.setState({ designations: response.data });
       })
@@ -148,18 +149,45 @@ class Employee extends Component {
   };
 
   deleteEmployee(id) {
-    axios
-      .delete("http://localhost:9000/employee/delete/" + id)
-      .then((res) => {
-        console.log("designation successfully deleted!");
-        window.location.href = "/employee";
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(
-          "Cannot delete this employee, this employee has a calendar event."
-        );
-      });
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        axios
+            .delete("http://localhost:9000/employee/delete/" + id)
+            .then((res) => {
+              if (res.data.status) {
+                Swal.fire({
+                  title: 'YAY!!!',
+                  text: 'Employee has been deleted successfully',
+                  icon: 'success',
+                  timer: 1500
+                }).then(() => {
+                  window.location.href = "/employee";
+                })
+              }else{
+                return Swal.fire({
+                  title: 'Oops!!!',
+                  text: res.data.Employee,
+                  icon: 'error',
+                })
+              }
+            })
+            .catch((error) => {
+              console.log(error.message);
+              alert(
+                  "Cannot delete this employee, this employee has a calendar event."
+              );
+            });
+      }
+    })
+
   }
 
   render() {
@@ -286,8 +314,8 @@ class Employee extends Component {
                         </div>
                         <div className="form-group col-md-6">
                           <label>Designation</label>
-                          <select name="designation" className="form-control">
-                            <option selected="selected" disabled="disabled">
+                          <select name="designation" className="form-control" required>
+                            <option selected="selected" disabled="disabled" value=''>
                               Select Designation
                             </option>
 

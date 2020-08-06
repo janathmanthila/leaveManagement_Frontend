@@ -3,6 +3,7 @@ import "react-dual-listbox/lib/react-dual-listbox.css";
 import axios from "axios";
 
 import AllocationLine from "../allocation-lines/allocation-lines.component";
+import Swal from "sweetalert2";
 
 class LeaveAllocation extends Component {
   constructor(props) {
@@ -69,6 +70,7 @@ class LeaveAllocation extends Component {
             id: lastAllocatedLineID + 1,
             leaveTypeId: null,
             leaveAmount: null,
+            leaveAllocate_status: true,
           },
         ],
       });
@@ -79,6 +81,7 @@ class LeaveAllocation extends Component {
             id: 1,
             leaveTypeId: null,
             leaveAmount: null,
+            leaveAllocate_status: true,
           },
         ],
       });
@@ -178,9 +181,32 @@ class LeaveAllocation extends Component {
       });
   };
 
+  checkYearRestriction = (leaveTypeId, year, employeeId) => {
+    const leaveType = this.state.leaveTypes.find(type => type._id === leaveTypeId)
+    if(leaveType.year_restriction){
+      return this.state.leaveAllocate.find(line => line.employeeId._id === employeeId && line.year === parseInt(year) && line.leaveTypeId._id === leaveTypeId) ? [true, leaveType] : [false, leaveType]
+    }
+    return [false, leaveType]
+  }
+
   allocateLeave = (event) => {
     event.preventDefault();
     var formData = new FormData(event.target);
+    // check for year restriction on leave type
+    let errorData = [false, null]
+    this.state.allocationLines.map(line => {
+      let [restricted, leaveType] = this.checkYearRestriction(line.leaveTypeId, formData.get("year"), formData.get("employeeName"))
+      if(restricted){
+        errorData = [true, leaveType.leaveType]
+      }
+    })
+    if(errorData[0]){
+      return  Swal.fire({
+        title: 'Oops!!!',
+        text: 'There is a year restriction on ' + errorData[1],
+        icon: 'error',
+      })
+    }
     const allocationData = {
       employeeId: formData.get("employeeName"),
       year: formData.get("year"),
@@ -221,15 +247,34 @@ class LeaveAllocation extends Component {
   };
 
   deleteLeaveAllocate(id) {
-    axios
-      .delete("http://localhost:9000/leaveAllocate/delete/" + id)
-      .then((res) => {
-        console.log("designation successfully deleted!");
-        window.location.href = "/leave_allocation";
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        axios
+            .delete("http://localhost:9000/leaveAllocate/delete/" + id)
+            .then((res) => {
+              Swal.fire({
+                title: 'YAY!!!',
+                text: 'Allocation has been deleted successfully',
+                icon: 'success',
+                timer: 1500
+              }).then(() => {
+                window.location.href = "/leave_allocation";
+              })
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+      }
+    })
+
   }
 
   render() {

@@ -45,46 +45,58 @@ class Header extends Component {
                   <i className="fa fa-calendar"></i> &nbsp;&nbsp;
                   <span>Leave Calendar</span>
                   <span className="pull-right-container">
-                    <i className="fa fa-angle-left pull-right"></i>
                   </span>
                 </Link>
               </li>
-              <li>
-                <Link to={`/employee`}>
-                  <i className="fa fa-users"></i> &nbsp;&nbsp;
-                  <span>Employees</span>
-                  <span className="pull-right-container">
-                    <i className="fa fa-angle-left pull-right"></i>
+              <li className='panel-heading' role="tab"  data-toggle="collapse" data-target="#configuration-list">
+
+
+                  <a href='#'> <i className="fa fa-calendar"></i> &nbsp;&nbsp;Configurations
+                    <span className="pull-right-container">
+                    <i className="fa fa-angle-down pull-right"></i>
                   </span>
-                </Link>
+                  </a>
+
+
               </li>
-              <li>
-                <Link to={`/leave_allocation`}>
-                  <i className="fa fa-calendar-plus-o"></i> &nbsp;&nbsp;
-                  <span>Leave Allocations</span>
-                  <span className="pull-right-container">
-                    <i className="fa fa-angle-left pull-right"></i>
+              <div id="configuration-list" className="collapse">
+                <ul className="sidebar-menu">
+                  <li>
+                    <Link to={`/employee`}>
+                      <i className="fa fa-users"></i> &nbsp;&nbsp;
+                      <span>Employees</span>
+                      <span className="pull-right-container">
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link to={`/leave_type`}>
-                  <i className="fa fa-calendar-plus-o"></i> &nbsp;&nbsp;
-                  <span>Leave Types</span>
-                  <span className="pull-right-container">
-                    <i className="fa fa-angle-left pull-right"></i>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/leave_allocation`}>
+                      <i className="fa fa-calendar-plus-o"></i> &nbsp;&nbsp;
+                      <span>Leave Allocations</span>
+                      <span className="pull-right-container">
                   </span>
-                </Link>
-              </li>
-              <li>
-                <Link to={`/designation`}>
-                  <i className="fa fa-calendar-plus-o"></i> &nbsp;&nbsp;
-                  <span>Designation</span>
-                  <span className="pull-right-container">
-                    <i className="fa fa-angle-left pull-right"></i>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/leave_type`}>
+                      <i className="fa fa-calendar-plus-o"></i> &nbsp;&nbsp;
+                      <span>Leave Types</span>
+                      <span className="pull-right-container">
                   </span>
-                </Link>
-              </li>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/designation`}>
+                      <i className="fa fa-calendar-plus-o"></i> &nbsp;&nbsp;
+                      <span>Designation</span>
+                      <span className="pull-right-container">
+                  </span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+
             </ul>
           </section>
         </aside>
