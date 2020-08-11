@@ -51,7 +51,7 @@ class Header extends Component {
               <li className='panel-heading' role="tab"  data-toggle="collapse" data-target="#configuration-list">
 
 
-                  <a href='#'> <i className="fa fa-calendar"></i> &nbsp;&nbsp;Configurations
+                  <a href='#'> <i className="fa fa-gears"></i> &nbsp;&nbsp;Configurations
                     <span className="pull-right-container">
                     <i className="fa fa-angle-down pull-right"></i>
                   </span>
@@ -89,6 +89,14 @@ class Header extends Component {
                     <Link to={`/designation`}>
                       <i className="fa fa-calendar-plus-o"></i> &nbsp;&nbsp;
                       <span>Designation</span>
+                      <span className="pull-right-container">
+                  </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/public-holidays`}>
+                      <i className="fa fa-moon-o"></i> &nbsp;&nbsp;
+                      <span>Public Holidays</span>
                       <span className="pull-right-container">
                   </span>
                     </Link>

@@ -6,6 +6,7 @@ import Calender from "../calendar/Calender";
 import LeaveResponse from "../leaves/leaveResponse";
 import LeaveType from "../leaveType/LeaveType";
 import Designation from "../designation/Designation";
+import Holidays from "../holidays/Holidays.jsx";
 
 const BaseRouter = () => (
   <div>
@@ -15,6 +16,7 @@ const BaseRouter = () => (
     <Route exact path="/leaves/edit/:id" component={LeaveResponse} />
     <Route exact path="/leave_type" component={LeaveType} />
     <Route exact path="/designation" component={Designation} />
+    <Route exact path="/public-holidays" component={Holidays} />
   </div>
 );
 
