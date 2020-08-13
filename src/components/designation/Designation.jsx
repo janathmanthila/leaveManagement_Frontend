@@ -8,6 +8,8 @@ class Designation extends Component {
     this.deleteDesignation = this.deleteDesignation.bind(this);
     this.supervisorRef = React.createRef();
     this.state = {
+      token:'',
+      is_logged: this.props.is_logged,
       designations: [],
       designation_code: "",
       designation: "",
@@ -179,176 +181,184 @@ class Designation extends Component {
   };
 
   render() {
-    return (
-      <Fragment>
-        <div className="content-wrapper">
-          <section className="content-header">
-            <h1>Designation</h1>
-            <ol className="breadcrumb">
-              <li>
-                <a href="#">
-                  <i className="fa fa-users"></i> Home
-                </a>
-              </li>
-              <li>
-                <a href="#">Designation</a>
-              </li>
-            </ol>
-          </section>
-          <section className="content">
-            <div className="row">
-              <div className="col-xs-12">
-                <div className="box">
-                  <div className="box-header">
-                    <button
-                      className="pull-right btn btn-success"
-                      id="create_designation"
-                      data-toggle="modal"
-                      data-target=".new-designation"
-                    >
-                      Create New Designation
-                    </button>
-                  </div>
-                  <div className="box-body">
-                    <div className="row">
-                      <div className="col-md-12"></div>
+    if ((this.props.is_logged == undefined) || (!this.props.is_logged)) {
+      return (
+          window.location.href = "/"
+      )
+    } else {
+      return (
+          <Fragment>
+            <div className="content-wrapper">
+              <section className="content-header">
+                <h1>Designation</h1>
+                <ol className="breadcrumb">
+                  <li>
+                    <a href="#">
+                      <i className="fa fa-users"></i> Home
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">Designation</a>
+                  </li>
+                </ol>
+              </section>
+              <section className="content">
+                <div className="row">
+                  <div className="col-xs-12">
+                    <div className="box">
+                      <div className="box-header">
+                        <button
+                            className="pull-right btn btn-success"
+                            id="create_designation"
+                            data-toggle="modal"
+                            data-target=".new-designation"
+                        >
+                          Create New Designation
+                        </button>
+                      </div>
+                      <div className="box-body">
+                        <div className="row">
+                          <div className="col-md-12"></div>
+                        </div>
+                      </div>
+
+                      <div className="content">
+                        <table className="table table-bordered">
+                          <thead className="thead-light">
+                          <tr>
+                            <th scope="col">Designation</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                          </thead>
+                          <tbody>{this.getDesignations()}</tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
+                </div>
+              </section>
 
-                  <div className="content">
-                    <table className="table table-bordered">
-                      <thead className="thead-light">
-                        <tr>
-                          <th scope="col">Designation</th>
-                          <th scope="col">Code</th>
-                          <th scope="col">Status</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>{this.getDesignations()}</tbody>
-                    </table>
+              {/*add new designation modal*/}
+              <div
+                  className="modal fade new-designation"
+                  tabIndex="-1"
+                  role="dialog"
+              >
+                <div className="modal-dialog modal-lg" role="document">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h4 className="modal-title">Add New Designation</h4>
+                    </div>
+                    <form role="form" onSubmit={this.createDesignation}>
+                      <div className="modal-body">
+                        <div className="form-group">
+                          <label>Designation</label>
+                          <input
+                              type="text"
+                              className="form-control"
+                              name="designation"
+                              placeholder="Designation"
+                              required
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Code</label>
+                          <input
+                              type="text"
+                              className="form-control"
+                              name="designation_code"
+                              placeholder="Code"
+                              required
+                          />
+                        </div>
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                          Reset
+                        </button>
+                        <button type="submit" className="btn btn-primary">
+                          Create
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              {/*update - designation modal*/}
+
+              <div
+                  className="modal fade update-designation"
+                  tabIndex="-1"
+                  role="dialog"
+              >
+                <div className="modal-dialog modal-lg" role="document">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h4 className="modal-title">Update Designation</h4>
+                    </div>
+                    <form role="form" onSubmit={this.updateDesignation}>
+                      <div className="modal-body">
+                        <input
+                            type="hidden"
+                            className="form-control"
+                            name="designation_id"
+                            id="designation_id_edited"
+                            placeholder="Designation ID"
+                            required
+                        />
+                        <div className="form-group">
+                          <label>Designation</label>
+                          <input
+                              type="text"
+                              className="form-control"
+                              name="designation"
+                              id="designation_edited"
+                              placeholder="Designation"
+                              required
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Code</label>
+                          <input
+                              type="text"
+                              id="code_edited"
+                              className="form-control"
+                              name="designation_code"
+                              placeholder="Code"
+                              required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                          Reset
+                        </button>
+                        <button type="submit" className="btn btn-primary">
+                          Update
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
+          </Fragment>
+      );
+    }
 
-          {/*add new designation modal*/}
-          <div
-            className="modal fade new-designation"
-            tabIndex="-1"
-            role="dialog"
-          >
-            <div className="modal-dialog modal-lg" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h4 className="modal-title">Add New Designation</h4>
-                </div>
-                <form role="form" onSubmit={this.createDesignation}>
-                  <div className="modal-body">
-                    <div className="form-group">
-                      <label>Designation</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="designation"
-                        placeholder="Designation"
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Code</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="designation_code"
-                        placeholder="Code"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-dismiss="modal"
-                    >
-                      Reset
-                    </button>
-                    <button type="submit" className="btn btn-primary">
-                      Create
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
 
-          {/*update - designation modal*/}
-
-          <div
-            className="modal fade update-designation"
-            tabIndex="-1"
-            role="dialog"
-          >
-            <div className="modal-dialog modal-lg" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h4 className="modal-title">Update Designation</h4>
-                </div>
-                <form role="form" onSubmit={this.updateDesignation}>
-                  <div className="modal-body">
-                    <input
-                      type="hidden"
-                      className="form-control"
-                      name="designation_id"
-                      id="designation_id_edited"
-                      placeholder="Designation ID"
-                      required
-                    />
-                    <div className="form-group">
-                      <label>Designation</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="designation"
-                        id="designation_edited"
-                        placeholder="Designation"
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Code</label>
-                      <input
-                        type="text"
-                        id="code_edited"
-                        className="form-control"
-                        name="designation_code"
-                        placeholder="Code"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-dismiss="modal"
-                    >
-                      Reset
-                    </button>
-                    <button type="submit" className="btn btn-primary">
-                      Update
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Fragment>
-    );
   }
 }
 export default Designation;

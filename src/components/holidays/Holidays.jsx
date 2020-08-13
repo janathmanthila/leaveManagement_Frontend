@@ -32,53 +32,61 @@ class Holidays extends Component {
     };
 
     render() {
-        return (
-            <Fragment>
-                <div className="content-wrapper">
-                    <section className="content-header">
-                        <h1>Holidays</h1>
-                        <ol className="breadcrumb">
-                            <li>
-                                <a href="#">
-                                    <i className="fa fa-users"></i> Home
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">Holidays</a>
-                            </li>
-                        </ol>
-                    </section>
+        if ((this.props.is_logged == undefined) || (!this.props.is_logged)) {
+            // if ((this.state.user_logged == undefined) || (!this.state.user_logged)) {
+            return (
+                window.location.href = "/"
+            )
+        } else {
+            return (
+                <Fragment>
+                    <div className="content-wrapper">
+                        <section className="content-header">
+                            <h1>Holidays</h1>
+                            <ol className="breadcrumb">
+                                <li>
+                                    <a href="#">
+                                        <i className="fa fa-users"></i> Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">Holidays</a>
+                                </li>
+                            </ol>
+                        </section>
 
-                    <section className="content">
-                        <div className="row">
-                            <div className="col-xs-12">
-                                <div className="box">
-                                    <div className="box-body">
-                                        <div className="row">
-                                            <div className="col-md-12"></div>
+                        <section className="content">
+                            <div className="row">
+                                <div className="col-xs-12">
+                                    <div className="box">
+                                        <div className="box-body">
+                                            <div className="row">
+                                                <div className="col-md-12"></div>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="content">
-                                        <table className="table table-bordered table-striped table-responsive">
-                                            <thead>
+                                        <div className="content">
+                                            <table className="table table-bordered table-striped table-responsive">
+                                                <thead>
                                                 <tr>
                                                     <th>Date</th>
                                                     <th>Holiday Name</th>
                                                     <th>Description</th>
                                                     <th>Type</th>
                                                 </tr>
-                                            </thead>
-                                            <tbody>{this.getHolidays()}</tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>{this.getHolidays()}</tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-                </div>
-            </Fragment>
-        );
+                        </section>
+                    </div>
+                </Fragment>
+            );
+        }
+
     }
 }
 export default Holidays;

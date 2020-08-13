@@ -7,6 +7,8 @@ class LeaveType extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      token:'',
+      is_logged: this.props.is_logged,
       leaveTypes: [],
       leaveType_code: "",
       leaveType: "",
@@ -211,415 +213,422 @@ class LeaveType extends Component {
   }
 
   render() {
-    return (
-        <Fragment>
-          <div className="content-wrapper">
-            <section className="content-header">
-              <h1>Leave Types</h1>
-              <ol className="breadcrumb">
-                <li>
-                  <a href="#">
-                    <i className="fa fa-users"></i> Home
-                  </a>
-                </li>
-                <li>
-                  <a href="#">Leave Types</a>
-                </li>
-              </ol>
-            </section>
-            <section className="content">
-              <div className="row">
-                <div className="col-xs-12">
-                  <div className="box">
-                    <div className="box-header">
-                      <button
-                          className="pull-right btn btn-success"
-                          id="create_type"
-                          data-toggle="modal"
-                          data-target=".new-type"
-                      >
-                        Create New Leave Type
-                      </button>
-                    </div>
-                    <div className="box-body">
-                      <div className="row">
-                        <div className="col-md-12"></div>
+    if ((this.props.is_logged == undefined) || (!this.props.is_logged)) {
+      return (
+          window.location.href = "/"
+      )
+    } else {
+      return (
+          <Fragment>
+            <div className="content-wrapper">
+              <section className="content-header">
+                <h1>Leave Types</h1>
+                <ol className="breadcrumb">
+                  <li>
+                    <a href="#">
+                      <i className="fa fa-users"></i> Home
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">Leave Types</a>
+                  </li>
+                </ol>
+              </section>
+              <section className="content">
+                <div className="row">
+                  <div className="col-xs-12">
+                    <div className="box">
+                      <div className="box-header">
+                        <button
+                            className="pull-right btn btn-success"
+                            id="create_type"
+                            data-toggle="modal"
+                            data-target=".new-type"
+                        >
+                          Create New Leave Type
+                        </button>
+                      </div>
+                      <div className="box-body">
+                        <div className="row">
+                          <div className="col-md-12"></div>
+                        </div>
+                      </div>
+
+                      <div className="content">
+                        <table className="table table-bordered">
+                          <thead className="thead-light">
+                          <tr>
+                            <th scope="col">Leave Type</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Day Type</th>
+                            <th scope="col">Day Range</th>
+                            <th scope="col">Need Supportive Employee</th>
+                            <th scope="col">Need Leave Allocations</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" colSpan='2'>Action</th>
+                          </tr>
+                          </thead>
+                          <tbody>{this.getLeaveTypes()}</tbody>
+                        </table>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </section>
 
-                    <div className="content">
-                      <table className="table table-bordered">
-                        <thead className="thead-light">
-                        <tr>
-                          <th scope="col">Leave Type</th>
-                          <th scope="col">Code</th>
-                          <th scope="col">Day Type</th>
-                          <th scope="col">Day Range</th>
-                          <th scope="col">Need Supportive Employee</th>
-                          <th scope="col">Need Leave Allocations</th>
-                          <th scope="col">Status</th>
-                          <th scope="col" colSpan='2'>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>{this.getLeaveTypes()}</tbody>
-                      </table>
+              {/*add new type modal*/}
+              <div className="modal fade new-type" tabIndex="-1" role="dialog">
+                <div className="modal-dialog modal-lg" role="document">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h4 className="modal-title">Add New Leave Type</h4>
                     </div>
+                    <form role="form" onSubmit={this.createLeaveType}>
+                      <div className="modal-body">
+                        <div className="form-group">
+                          <label>Leave Type</label>
+                          <input
+                              type="text"
+                              className="form-control"
+                              name="leaveType_name"
+                              placeholder="Leave Type"
+                              required
+                              onChange={(e) =>
+                                  this.setState({
+                                    leaveType: e.target.value,
+                                  })
+                              }
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Code</label>
+                          <input
+                              type="text"
+                              className="form-control"
+                              name="leaveType_code"
+                              placeholder="Code"
+                              required
+                              onChange={(e) =>
+                                  this.setState({
+                                    leaveType_code: e.target.value,
+                                  })
+                              }
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="float-left">
+                            Day Type
+                          </label>
+                          <select
+                              className="form-control"
+                              required
+                              onChange={(e) =>
+                                  this.setState({
+                                    day_type: e.target.value,
+                                  })
+                              }
+                          >
+                            <option
+                                selected
+                                disabled
+                                value=""
+                            >
+                              Select Day Type
+                            </option>
+                            <option value="Full day">Full Day</option>
+                            <option value="Half day">Half Day</option>
+                            <option value="Both">Both</option>
+                            <option value="Time">Time Only</option>
+                          </select>
+                        </div>
+
+                        <div className="form-group">
+                          <label className="float-left">
+                            Day Range
+                          </label>
+                          <select
+                              className="form-control"
+                              required
+                              onChange={(e) =>
+                                  this.setState({
+                                    dayRange: e.target.value,
+                                  })
+                              }
+                          >
+                            <option
+                                selected
+                                disabled
+                                value=""
+                            >
+                              Select Day Range
+                            </option>
+                            <option value="Single">Single Day</option>
+                            <option value="Multiple">Multiple Days</option>
+                          </select>
+                        </div>
+
+                        <div className="form-group">
+                          <label className="float-left">
+                            Need Supportive Employee
+                          </label>
+                          <br/>
+                          <input type="radio" id="needSupportiveYes" name="needSupportive" value="true" required  onChange={(e) =>
+                              this.setState({
+                                needSupportive: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="needSupportiveYes">Yes</label><br/>
+                          <input type="radio" id="needSupportiveNo" name="needSupportive" value="false" onChange={(e) =>
+                              this.setState({
+                                needSupportive: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="needSupportiveNo">No</label><br/>
+                        </div>
+
+
+                        <div className="form-group">
+                          <label className="float-left">
+                            Need Leave Allocation
+                          </label>
+                          <br/>
+                          <input type="radio" id="needAllocationYes" name="needAllocation" value="true" required onChange={(e) =>
+                              this.setState({
+                                needAllocation: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="needAllocationYes">Yes</label><br/>
+                          <input type="radio" id="needAllocationNo" name="needAllocation" value="false" onChange={(e) =>
+                              this.setState({
+                                needAllocation: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="needAllocationNo">No</label><br/>
+                        </div>
+                        {
+                          this.state.needAllocation === 'true' ?
+                              <div className="form-group " >
+                                <label className="float-left">
+                                  Year Restriction
+                                </label>
+                                <br/>
+                                <input type="radio" id="yearRestrictionYes" name="yearRestriction" value="true" required={this.state.needAllocation} onChange={(e) =>
+                                    this.setState({
+                                      yearRestriction: e.target.value,
+                                    })
+                                }/>
+                                <label htmlFor="yearRestrictionYes">Yes</label><br/>
+                                <input type="radio" id="yearRestrictionNo" name="yearRestriction" value="false" onChange={(e) =>
+                                    this.setState({
+                                      yearRestriction: e.target.value,
+                                    })
+                                }/>
+                                <label htmlFor="yearRestrictionNo">No</label><br/>
+                              </div> :
+                              null
+                        }
+
+
+                      </div>
+                      <div className="modal-footer">
+                        <buttona
+                            type="button"
+                            className="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                          Reset
+                        </buttona>
+                        <button type="submit" className="btn btn-primary">
+                          Create
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
-            </section>
 
-            {/*add new type modal*/}
-            <div className="modal fade new-type" tabIndex="-1" role="dialog">
-              <div className="modal-dialog modal-lg" role="document">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h4 className="modal-title">Add New Leave Type</h4>
+              {/*update - leave type modal*/}
+
+              <div
+                  className="modal fade update-leaveType"
+                  tabIndex="-1"
+                  role="dialog"
+              >
+                <div className="modal-dialog modal-lg" role="document">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h4 className="modal-title">Update Leave Type</h4>
+                    </div>
+                    <form role="form" onSubmit={this.updateLeaveType}>
+                      <div className="modal-body">
+                        <input
+                            type="hidden"
+                            className="form-control"
+                            name="designation_id"
+                            id="leaveType_id_edited"
+                            placeholder="Leave Type ID"
+                            required
+                        />
+                        <div className="form-group">
+                          <label>Leave Type</label>
+                          <input
+                              type="text"
+                              className="form-control"
+                              name="leaveType"
+                              id="leaveType_edited"
+                              placeholder="Leave Type"
+                              required
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Code</label>
+                          <input
+                              type="text"
+                              id="code_edited"
+                              className="form-control"
+                              name="leaveType_code"
+                              placeholder="Code"
+                              required
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label className="float-left">
+                            Day Type
+                          </label>
+                          <select
+                              className="form-control"
+                              id='day_type_edited'
+                              name='day_type_edited'
+                              required
+                              onChange={(e) =>
+                                  this.setState({
+                                    day_type: e.target.value,
+                                  })
+                              }
+                          >
+                            <option
+                                selected
+                                disabled
+                                value=""
+                            >
+                              Select Day Type
+                            </option>
+                            <option value="Full day">Full Day</option>
+                            <option value="Half day">Half Day</option>
+                            <option value="Both">Both</option>
+                            <option value="Time">Time Only</option>
+                          </select>
+                        </div>
+
+                        <div className="form-group">
+                          <label className="float-left">
+                            Day Range
+                          </label>
+                          <select
+                              className="form-control"
+                              id='day_range_edited'
+                              name='day_range_edited'
+                              required
+                              onChange={(e) =>
+                                  this.setState({
+                                    dayRange: e.target.value,
+                                  })
+                              }
+                          >
+                            <option
+                                selected
+                                disabled
+                                value=""
+                            >
+                              Select Day Range
+                            </option>
+                            <option value="Single">Single Day</option>
+                            <option value="Multiple">Multiple Days</option>
+                          </select>
+                        </div>
+
+                        <div className="form-group">
+                          <label className="float-left">
+                            Need Supportive Employee
+                          </label>
+                          <br/>
+                          <input type="radio" id="needSupportiveYesEdited" name="needSupportiveEdited" value="true" required  onChange={(e) =>
+                              this.setState({
+                                needSupportive: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="needSupportiveYesEdited">Yes</label><br/>
+                          <input type="radio" id="needSupportiveNoEdited" name="needSupportiveEdited" value="false" onChange={(e) =>
+                              this.setState({
+                                needSupportive: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="needSupportiveNoEdited">No</label><br/>
+                        </div>
+
+
+                        <div className="form-group">
+                          <label className="float-left">
+                            Need Leave Allocation
+                          </label>
+                          <br/>
+                          <input type="radio" id="needAllocationYesEdited" name="needAllocationEdited" value="true" required onChange={(e) =>
+                              this.setState({
+                                needAllocation: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="needAllocationYesEdited">Yes</label><br/>
+                          <input type="radio" id="needAllocationNoEdited" name="needAllocationEdited" value="false" onChange={(e) =>
+                              this.setState({
+                                needAllocation: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="needAllocationNoEdited">No</label><br/>
+                        </div>
+
+                        <div className="form-group">
+                          <label className="float-left">
+                            Year Restriction
+                          </label>
+                          <br/>
+                          <input type="radio" id="yearRestrictionYesEdited" name="yearRestrictionEdited" value="true" required={this.state.needAllocation} onChange={(e) =>
+                              this.setState({
+                                yearRestriction: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="yearRestrictionYesEdited">Yes</label><br/>
+                          <input type="radio" id="yearRestrictionNoEdited" name="yearRestrictionEdited" value="false" onChange={(e) =>
+                              this.setState({
+                                yearRestriction: e.target.value,
+                              })
+                          }/>
+                          <label htmlFor="yearRestrictionNoEdited">No</label><br/>
+                        </div>
+
+                      </div>
+
+                      <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                          Reset
+                        </button>
+                        <button type="submit" className="btn btn-primary">
+                          Update
+                        </button>
+                      </div>
+                    </form>
                   </div>
-                  <form role="form" onSubmit={this.createLeaveType}>
-                    <div className="modal-body">
-                      <div className="form-group">
-                        <label>Leave Type</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="leaveType_name"
-                            placeholder="Leave Type"
-                            required
-                            onChange={(e) =>
-                                this.setState({
-                                  leaveType: e.target.value,
-                                })
-                            }
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Code</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="leaveType_code"
-                            placeholder="Code"
-                            required
-                            onChange={(e) =>
-                                this.setState({
-                                  leaveType_code: e.target.value,
-                                })
-                            }
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="float-left">
-                          Day Type
-                        </label>
-                        <select
-                            className="form-control"
-                            required
-                            onChange={(e) =>
-                                this.setState({
-                                  day_type: e.target.value,
-                                })
-                            }
-                        >
-                          <option
-                              selected
-                              disabled
-                              value=""
-                          >
-                            Select Day Type
-                          </option>
-                          <option value="Full day">Full Day</option>
-                          <option value="Half day">Half Day</option>
-                          <option value="Both">Both</option>
-                          <option value="Time">Time Only</option>
-                        </select>
-                      </div>
-
-                      <div className="form-group">
-                        <label className="float-left">
-                          Day Range
-                        </label>
-                        <select
-                            className="form-control"
-                            required
-                            onChange={(e) =>
-                                this.setState({
-                                  dayRange: e.target.value,
-                                })
-                            }
-                        >
-                          <option
-                              selected
-                              disabled
-                              value=""
-                          >
-                            Select Day Range
-                          </option>
-                          <option value="Single">Single Day</option>
-                          <option value="Multiple">Multiple Days</option>
-                        </select>
-                      </div>
-
-                      <div className="form-group">
-                        <label className="float-left">
-                          Need Supportive Employee
-                        </label>
-                        <br/>
-                        <input type="radio" id="needSupportiveYes" name="needSupportive" value="true" required  onChange={(e) =>
-                            this.setState({
-                              needSupportive: e.target.value,
-                            })
-                        }/>
-                        <label htmlFor="needSupportiveYes">Yes</label><br/>
-                        <input type="radio" id="needSupportiveNo" name="needSupportive" value="false" onChange={(e) =>
-                            this.setState({
-                              needSupportive: e.target.value,
-                            })
-                        }/>
-                        <label htmlFor="needSupportiveNo">No</label><br/>
-                      </div>
-
-
-                    <div className="form-group">
-                      <label className="float-left">
-                        Need Leave Allocation
-                      </label>
-                      <br/>
-                      <input type="radio" id="needAllocationYes" name="needAllocation" value="true" required onChange={(e) =>
-                          this.setState({
-                            needAllocation: e.target.value,
-                          })
-                      }/>
-                      <label htmlFor="needAllocationYes">Yes</label><br/>
-                      <input type="radio" id="needAllocationNo" name="needAllocation" value="false" onChange={(e) =>
-                          this.setState({
-                            needAllocation: e.target.value,
-                          })
-                      }/>
-                      <label htmlFor="needAllocationNo">No</label><br/>
-                    </div>
-                      {
-                        this.state.needAllocation === 'true' ?
-                            <div className="form-group " >
-                              <label className="float-left">
-                                Year Restriction
-                              </label>
-                              <br/>
-                              <input type="radio" id="yearRestrictionYes" name="yearRestriction" value="true" required={this.state.needAllocation} onChange={(e) =>
-                                  this.setState({
-                                    yearRestriction: e.target.value,
-                                  })
-                              }/>
-                              <label htmlFor="yearRestrictionYes">Yes</label><br/>
-                              <input type="radio" id="yearRestrictionNo" name="yearRestriction" value="false" onChange={(e) =>
-                                  this.setState({
-                                    yearRestriction: e.target.value,
-                                  })
-                              }/>
-                              <label htmlFor="yearRestrictionNo">No</label><br/>
-                            </div> :
-                            null
-                      }
-
-
-                </div>
-                    <div className="modal-footer">
-                      <buttona
-                          type="button"
-                          className="btn btn-secondary"
-                          data-dismiss="modal"
-                      >
-                        Reset
-                      </buttona>
-                      <button type="submit" className="btn btn-primary">
-                        Create
-                      </button>
-                    </div>
-                  </form>
                 </div>
               </div>
             </div>
+          </Fragment>
+      );
+    }
 
-            {/*update - leave type modal*/}
-
-            <div
-                className="modal fade update-leaveType"
-                tabIndex="-1"
-                role="dialog"
-            >
-              <div className="modal-dialog modal-lg" role="document">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h4 className="modal-title">Update Leave Type</h4>
-                  </div>
-                  <form role="form" onSubmit={this.updateLeaveType}>
-                    <div className="modal-body">
-                      <input
-                          type="hidden"
-                          className="form-control"
-                          name="designation_id"
-                          id="leaveType_id_edited"
-                          placeholder="Leave Type ID"
-                          required
-                      />
-                      <div className="form-group">
-                        <label>Leave Type</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="leaveType"
-                            id="leaveType_edited"
-                            placeholder="Leave Type"
-                            required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Code</label>
-                        <input
-                            type="text"
-                            id="code_edited"
-                            className="form-control"
-                            name="leaveType_code"
-                            placeholder="Code"
-                            required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label className="float-left">
-                          Day Type
-                        </label>
-                        <select
-                            className="form-control"
-                            id='day_type_edited'
-                            name='day_type_edited'
-                            required
-                            onChange={(e) =>
-                                this.setState({
-                                  day_type: e.target.value,
-                                })
-                            }
-                        >
-                          <option
-                              selected
-                              disabled
-                              value=""
-                          >
-                            Select Day Type
-                          </option>
-                          <option value="Full day">Full Day</option>
-                          <option value="Half day">Half Day</option>
-                          <option value="Both">Both</option>
-                          <option value="Time">Time Only</option>
-                        </select>
-                      </div>
-
-                      <div className="form-group">
-                        <label className="float-left">
-                          Day Range
-                        </label>
-                        <select
-                            className="form-control"
-                            id='day_range_edited'
-                            name='day_range_edited'
-                            required
-                            onChange={(e) =>
-                                this.setState({
-                                  dayRange: e.target.value,
-                                })
-                            }
-                        >
-                          <option
-                              selected
-                              disabled
-                              value=""
-                          >
-                            Select Day Range
-                          </option>
-                          <option value="Single">Single Day</option>
-                          <option value="Multiple">Multiple Days</option>
-                        </select>
-                      </div>
-
-                      <div className="form-group">
-                        <label className="float-left">
-                          Need Supportive Employee
-                        </label>
-                        <br/>
-                        <input type="radio" id="needSupportiveYesEdited" name="needSupportiveEdited" value="true" required  onChange={(e) =>
-                            this.setState({
-                              needSupportive: e.target.value,
-                            })
-                        }/>
-                        <label htmlFor="needSupportiveYesEdited">Yes</label><br/>
-                        <input type="radio" id="needSupportiveNoEdited" name="needSupportiveEdited" value="false" onChange={(e) =>
-                            this.setState({
-                              needSupportive: e.target.value,
-                            })
-                        }/>
-                        <label htmlFor="needSupportiveNoEdited">No</label><br/>
-                      </div>
-
-
-                      <div className="form-group">
-                        <label className="float-left">
-                          Need Leave Allocation
-                        </label>
-                        <br/>
-                        <input type="radio" id="needAllocationYesEdited" name="needAllocationEdited" value="true" required onChange={(e) =>
-                            this.setState({
-                              needAllocation: e.target.value,
-                            })
-                        }/>
-                        <label htmlFor="needAllocationYesEdited">Yes</label><br/>
-                        <input type="radio" id="needAllocationNoEdited" name="needAllocationEdited" value="false" onChange={(e) =>
-                            this.setState({
-                              needAllocation: e.target.value,
-                            })
-                        }/>
-                        <label htmlFor="needAllocationNoEdited">No</label><br/>
-                      </div>
-
-                            <div className="form-group">
-                              <label className="float-left">
-                                Year Restriction
-                              </label>
-                              <br/>
-                              <input type="radio" id="yearRestrictionYesEdited" name="yearRestrictionEdited" value="true" required={this.state.needAllocation} onChange={(e) =>
-                                  this.setState({
-                                    yearRestriction: e.target.value,
-                                  })
-                              }/>
-                              <label htmlFor="yearRestrictionYesEdited">Yes</label><br/>
-                              <input type="radio" id="yearRestrictionNoEdited" name="yearRestrictionEdited" value="false" onChange={(e) =>
-                                  this.setState({
-                                    yearRestriction: e.target.value,
-                                  })
-                              }/>
-                              <label htmlFor="yearRestrictionNoEdited">No</label><br/>
-                            </div>
-
-                    </div>
-
-                    <div className="modal-footer">
-                      <button
-                          type="button"
-                          className="btn btn-secondary"
-                          data-dismiss="modal"
-                      >
-                        Reset
-                      </button>
-                      <button type="submit" className="btn btn-primary">
-                        Update
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Fragment>
-    );
   }
 }
 

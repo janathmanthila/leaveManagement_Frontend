@@ -27,8 +27,8 @@
     "react-dual-listbox": "^2.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "simple-react-validator": "^1.5.0",
     "sweetalert2": "^9.17.1"
-
   },
   "scripts": {
     "start": "react-scripts start",
